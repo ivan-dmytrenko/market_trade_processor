@@ -1,0 +1,18 @@
+#!/usr/bin/env php
+<?php
+$loader = require __DIR__.'/../../vendor/autoload.php';
+
+$app = new Application();
+$app->run();
+
+/** Register console provider **/
+$app->register(new Knp\Provider\ConsoleServiceProvider(), array(
+    'console.name'              => 'Market Trade Messages',
+    'console.version'           => '1.0.0',
+    'console.project_directory' => __DIR__,
+));
+
+/** Add the Resque worker command **/
+$app['console']->add(new \Grom\SilexResque\Command\ResqueWorkerCommand($app));
+
+$app['console']->run();
